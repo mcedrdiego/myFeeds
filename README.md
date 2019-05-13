@@ -7,6 +7,7 @@ Add config.js in ./src
 
 const apiKey= *"YOUR API KEY"* 
 
+```js
 let rssUrl=["https://www.lemonde.fr/rss/une.xml","http://feeds.bbci.co.uk/news/world/africa/rss.xml"]
-
+```
 export {apiKey, rssUrl}
