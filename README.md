@@ -1,7 +1,7 @@
 # RSS feeds Reader (React native 0.59)
 
 ![ScreenShot](readme/Screenshot.png )
-<img src="readme/Screenshot.png" width="100">
+<img src="readme/Screenshot.png" width="200">
 
 Add config.js in ./src
 
