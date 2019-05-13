@@ -1,5 +1,13 @@
 import React from 'react'
-import {Text,View,StyleSheet,Alert, TouchableOpacity, FlatList, ActivityIndicator} from 'react-native'
+import {
+    Text,
+    View,
+    StyleSheet,
+    TouchableOpacity, 
+    FlatList, 
+    ActivityIndicator,
+    ScrollView
+} from 'react-native'
 import FeedCard from '../components/FeedCard'
 import CardSM from '../components/CardSM'
 import {apiKey, rssUrl} from '../config'
@@ -46,39 +54,36 @@ export default class Home extends React.Component{
         this.feedFetch()
     }
       render(){
-
-        if(this.state.isLoading){
-          return(
-            <View style={{flex: 1, padding: 20}}>
-              <ActivityIndicator/>
-            </View>
-          )
-        }
-    
         return(
           <View style={styles.container}>
-            <View style={styles.nav}>
-                <CardSM selected={this.state.selected} title={sources[0]} _onPress={()=>this.feedFetch(0)} />
-                <CardSM selected={this.state.selected} title={sources[1]} _onPress={()=>this.feedFetch(1)}/>
-                <CardSM selected={this.state.selected} title={sources[2]} _onPress={()=>this.feedFetch(2)}/>
+            <View>
+                <ScrollView 
+                    horizontal={true}
+                    alwaysBounceHorizontal={true}
+                >
+                    <CardSM selected={this.state.selected} title={sources[0]} _onPress={()=>this.feedFetch(0)} />
+                    <CardSM selected={this.state.selected} title={sources[1]} _onPress={()=>this.feedFetch(1)}/>
+                    <CardSM selected={this.state.selected} title={sources[2]} _onPress={()=>this.feedFetch(2)}/>
+                </ScrollView>
             </View>
-            <FlatList
-              data={this.state.dataSource}
-              keyExtractor={item=>item.link}
-              renderItem={({item}) => 
-                <FeedCard 
-                    title={item.title}
-                    img={item.thumbnail !="" ? item.thumbnail :item.enclosure.link}
-                    descr={item.description} 
-                    date={item.pubDate}  
-                    publisher={item.author} 
-                    link={()=>this.ReadInfo(item.link)}            
+            {this.state.isLoading ? <View style={styles.loading}><ActivityIndicator/></View> :
+                <FlatList
+                    data={this.state.dataSource}
+                    keyExtractor={item=>item.link}
+                    renderItem={({item}) => 
+                    <FeedCard 
+                        title={item.title}
+                        img={item.thumbnail !="" ? item.thumbnail :item.enclosure.link}
+                        descr={item.description} 
+                        date={item.pubDate}  
+                        publisher={item.author} 
+                        link={()=>this.ReadInfo(item.link)}            
+                    />}
                 />
             }
-            />
             <TouchableOpacity style={styles.btn} onPress={()=>this.props.navigation.navigate('AddFeed')}>
                     <Text style={styles.icon}>{"+"}</Text>
-                </TouchableOpacity>
+            </TouchableOpacity>
           </View>
         )
       }
@@ -90,9 +95,10 @@ const styles = StyleSheet.create({
         backgroundColor:'#eeeeee',
         flex:1,
     },
-    nav:{
-        flexDirection:'row',
-        justifyContent:'flex-start',
+    loading:{
+        justifyContent:'center',
+        alignItems:'center',
+        flex:1
     },
     btn:{
         backgroundColor:'#393e46',

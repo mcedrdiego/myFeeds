@@ -1,5 +1,5 @@
 import React from 'react'
-import {Text,View} from 'react-native'
+import {View} from 'react-native'
 import {WebView} from 'react-native-webview'
 export default class ReadFeed extends React.Component{
     constructor(props)
