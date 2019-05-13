@@ -1,9 +1,10 @@
 import React from 'react'
 import {Text,View,StyleSheet,Alert, TouchableOpacity, FlatList, ActivityIndicator} from 'react-native'
 import FeedCard from '../components/FeedCard'
+import CardSM from '../components/CardSM'
 import {apiKey, rssUrl} from '../config'
-let varOb = []
 
+let sources = ["Le Monde", "BBC Africa", "20 Minutes"]
 export default class Home extends React.Component{
     static navigationOptions={
         title:'My Feeds'
@@ -11,26 +12,30 @@ export default class Home extends React.Component{
     constructor(props)
     {
         super(props)
-        this.state ={ isLoading: true}
+        this.state ={ 
+            isLoading: true,
+            selected: "Le Monde"
+        }
     }
     ReadInfo = (info)=>{
         this.props.navigation.navigate('ReadFeed',{
             link:info
         })
     }
-    pushdata=(data)=>{
-        if(varOb==null) varOb=data;
-        else varOb.push(data)
-    }
-    feedFetch=()=>{
-        return fetch('https://api.rss2json.com/v1/api.json?rss_url='+rssUrl[0]+'&api_key='+apiKey)
+
+    feedFetch=(i=0)=>{
+        if(!this.state.isLoading) 
+        this.setState({
+            isLoading:true,
+            selected:sources[i]
+        })
+        return fetch('https://api.rss2json.com/v1/api.json?rss_url='+rssUrl[i]+'&api_key='+apiKey)
             .then((response) => response.json())
             .then((responseJson) => {
                 this.setState({
                     isLoading:false,
                     dataSource:responseJson.items
                 })
-                this.pushdata(responseJson.items)
                 return true
             })
         .catch((error) => {
@@ -52,13 +57,18 @@ export default class Home extends React.Component{
     
         return(
           <View style={styles.container}>
+            <View style={styles.nav}>
+                <CardSM selected={this.state.selected} title={sources[0]} _onPress={()=>this.feedFetch(0)} />
+                <CardSM selected={this.state.selected} title={sources[1]} _onPress={()=>this.feedFetch(1)}/>
+                <CardSM selected={this.state.selected} title={sources[2]} _onPress={()=>this.feedFetch(2)}/>
+            </View>
             <FlatList
               data={this.state.dataSource}
               keyExtractor={item=>item.link}
               renderItem={({item}) => 
                 <FeedCard 
                     title={item.title}
-                    img={item.enclosure.link}
+                    img={item.thumbnail !="" ? item.thumbnail :item.enclosure.link}
                     descr={item.description} 
                     date={item.pubDate}  
                     publisher={item.author} 
@@ -79,6 +89,10 @@ const styles = StyleSheet.create({
     container:{
         backgroundColor:'#eeeeee',
         flex:1,
+    },
+    nav:{
+        flexDirection:'row',
+        justifyContent:'flex-start',
     },
     btn:{
         backgroundColor:'#393e46',
