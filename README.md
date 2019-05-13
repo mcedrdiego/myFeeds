@@ -1,9 +1,9 @@
-#RSS feeds Reader (React native 0.59)
+# RSS feeds Reader (React native 0.59)
 
 Add config.js in ./src
 
 
-##syntax
+## Syntax
 
 
 const apiKey="YOUR API KEY"
