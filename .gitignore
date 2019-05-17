@@ -57,3 +57,6 @@ buck-out/
 
 #APP
 src/config.js
+
+#Visual Studio Code 
+.vscode/
